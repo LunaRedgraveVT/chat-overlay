@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LunaRedgraveVT Twitch Chat</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+    #chat {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      height: 100vh;
+      width: 100vw;
+      padding: 20px;
+      box-sizing: border-box;
+      background: transparent;
+    }
+    .chat-line {
+      background: transparent;
+      border-left: 4px solid #ff004c;
+      color: white;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      border-radius: 16px;
+      font-size: 22px;
+      max-width: 90%;
+      width: fit-content;
+      word-wrap: break-word;
+      word-break: break-word;
+    }
+    .chat-author {
+      font-weight: bold;
+      color: #ff006e;
+      margin-right: 10px;
+    }
+    .chat-message {
+      color: white;
+    }
+    .chat-line::before {
+      content: '🐾 ';
+    }
+  </style>
+</head>
+<body>
+  <div id="chat"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/tmi.js@1.8.5"></script>
+  <script>
+    const chat = document.getElementById("chat");
+
+    function addMessage(author, message) {
+      const div = document.createElement("div");
+      div.className = "chat-line";
+      div.innerHTML = `<span class="chat-author">${author}:</span><span class="chat-message">${message}</span>`;
+      chat.appendChild(div);
+    }
+
+    // Connect to Twitch chat using tmi.js
+    const client = new tmi.Client({
+      options: { debug: false },
+      connection: {
+        reconnect: true,
+        secure: true
+      },
+      channels: ['LunaRedgraveVT']
+    });
+
+    client.connect();
+
+    client.on('message', (channel, tags, message, self) => {
+      addMessage(tags['display-name'] || tags['username'], message);
+    });
+  </script>
+</body>
+</html>
